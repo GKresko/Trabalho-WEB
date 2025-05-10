@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jo9bLuWfQAg=",
+  "dgSpecHash": "O58JMkgZOs8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\gustavo\\Desktop\\csharp-backend\\teste_2.csproj",
+  "projectFilePath": "C:\\Users\\gustavo\\Downloads\\Trabalho-WEB\\teste_2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gustavo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\gustavo\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.2\\microsoft.entityframeworkcore.7.0.2.nupkg.sha512",

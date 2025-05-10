@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gustavo\\Desktop\\csharp-backend\\teste_2.csproj": {}
+    "C:\\Users\\gustavo\\Downloads\\Trabalho-WEB\\teste_2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gustavo\\Desktop\\csharp-backend\\teste_2.csproj": {
+    "C:\\Users\\gustavo\\Downloads\\Trabalho-WEB\\teste_2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gustavo\\Desktop\\csharp-backend\\teste_2.csproj",
+        "projectUniqueName": "C:\\Users\\gustavo\\Downloads\\Trabalho-WEB\\teste_2.csproj",
         "projectName": "teste_2",
-        "projectPath": "C:\\Users\\gustavo\\Desktop\\csharp-backend\\teste_2.csproj",
+        "projectPath": "C:\\Users\\gustavo\\Downloads\\Trabalho-WEB\\teste_2.csproj",
         "packagesPath": "C:\\Users\\gustavo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gustavo\\Desktop\\csharp-backend\\obj\\",
+        "outputPath": "C:\\Users\\gustavo\\Downloads\\Trabalho-WEB\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\gustavo\\AppData\\Roaming\\NuGet\\NuGet.Config"
