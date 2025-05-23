@@ -216,3 +216,14 @@ C:\Users\gustavo\Downloads\Trabalho-WEB\backend\obj\Debug\net7.0\refint\teste_2.
 C:\Users\gustavo\Downloads\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.pdb
 C:\Users\gustavo\Downloads\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.genruntimeconfig.cache
 C:\Users\gustavo\Downloads\Trabalho-WEB\backend\obj\Debug\net7.0\ref\teste_2.dll
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.csproj.AssemblyReference.cache
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.AssemblyInfoInputs.cache
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.AssemblyInfo.cs
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.csproj.CoreCompileInputs.cache
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.sourcelink.json
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.dll
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\refint\teste_2.dll
+C:\Users\gustavock\Documents\Trabalho-WEB\backend\obj\Debug\net7.0\teste_2.pdb
