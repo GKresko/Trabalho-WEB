@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS
 // Configuração do CORS
 builder.Services.AddCors(options =>
 {
@@ -11,16 +12,23 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
-// Configuração de serviços
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Banco de Dados
 builder.Services.AddDbContext<Banco>(options =>
-    options.UseMySql("server=localhost;port=3306;database=planner;user=root;password=root",
-    new MySqlServerVersion(new Version(8, 0, 33))));
+    options.UseMySql(
+        "server=localhost;port=3306;database=planner;user=root;password=root",
+    new MySqlServerVersion(new Version(8, 0, 33))
+    )
+);
 
 var app = builder.Build();
 
@@ -31,7 +39,12 @@ app.UseCors("PermitirTudo");
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Rotas e APIs
+// Middleware
+app.UseCors("PermitirTudo");
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Rotas
 app.MapGet("/", () => "Loja da UP");
 app.MapLivroApi();
 app.MapPedidoApi();
