@@ -27,19 +27,23 @@ function TabPanel(props) {
 export default function App() {
   const [tab, setTab] = useState(0);
 
-  // Estados dos dados
+  // Dados
   const [livros, setLivros] = useState([]);
   const [autores, setAutores] = useState([]);
   const [pedidos, setPedidos] = useState([]);
   const [pagamentos, setPagamentos] = useState([]);
 
-  // Estados dos formulários
-  const [formLivro, setFormLivro] = useState({ titulo: "", autorId: "" });
-  const [formAutor, setFormAutor] = useState({ nome: "" });
-  const [formPedido, setFormPedido] = useState({ livroId: "", quantidade: 1 });
-  const [formPagamento, setFormPagamento] = useState({ pedidoId: "", valor: "" });
+  // Formulários (ajustados para os campos corretos)
+  const [formLivro, setFormLivro] = useState({ nome: "", autor: "" });
+  const [formAutor, setFormAutor] = useState({ nome: "", obra: "" });
+  const [formPedido, setFormPedido] = useState({ descricao: "", realizado: false });
+  const [formPagamento, setFormPagamento] = useState({
+    cartao: false,
+    pix: true,
+    dinheiro: false,
+  });
 
-  // Loading e notificações
+  // Loading e alertas
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ open: false, message: "", severity: "success" });
 
@@ -47,6 +51,7 @@ export default function App() {
 
   const apiBase = "http://localhost:5156";
 
+  // Fetch data
   const fetchLivros = async () => {
     try {
       const res = await fetch(`${apiBase}/livros`);
@@ -110,21 +115,28 @@ export default function App() {
     setAlert({ open: true, message, severity: "error" });
   }
 
+  // Submits
+
   const submitLivro = async (e) => {
     e.preventDefault();
-    if (!formLivro.titulo || !formLivro.autorId) {
-      alertError("Preencha título e autor");
+    if (!formLivro.nome || !formLivro.autor) {
+      alertError("Preencha titulo e autor do livro");
       return;
     }
     setLoading(true);
     try {
+      const payload = {
+        id: 0,
+        nome: formLivro.nome,
+        autor: formLivro.autor,
+      };
       const res = await fetch(`${apiBase}/livros`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formLivro),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Erro ao adicionar livro");
-      setFormLivro({ titulo: "", autorId: "" });
+      setFormLivro({ nome: "", autor: "" });
       fetchLivros();
       setAlert({ open: true, message: "Livro adicionado!", severity: "success" });
     } catch (err) {
@@ -136,19 +148,24 @@ export default function App() {
 
   const submitAutor = async (e) => {
     e.preventDefault();
-    if (!formAutor.nome) {
-      alertError("Preencha o nome do autor");
+    if (!formAutor.nome || !formAutor.obra) {
+      alertError("Preencha nome e obra do autor");
       return;
     }
     setLoading(true);
     try {
+      const payload = {
+        id: 0,
+        nome: formAutor.nome,
+        obra: formAutor.obra,
+      };
       const res = await fetch(`${apiBase}/autores`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formAutor),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Erro ao adicionar autor");
-      setFormAutor({ nome: "" });
+      setFormAutor({ nome: "", obra: "" });
       fetchAutores();
       setAlert({ open: true, message: "Autor adicionado!", severity: "success" });
     } catch (err) {
@@ -160,19 +177,24 @@ export default function App() {
 
   const submitPedido = async (e) => {
     e.preventDefault();
-    if (!formPedido.livroId || formPedido.quantidade < 1) {
-      alertError("Selecione um livro e quantidade válida");
+    if (!formPedido.descricao) {
+      alertError("Preencha a descrição do pedido");
       return;
     }
     setLoading(true);
     try {
+      const payload = {
+        id: 0,
+        descricao: formPedido.descricao,
+        realizado: formPedido.realizado,
+      };
       const res = await fetch(`${apiBase}/pedidos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formPedido),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Erro ao adicionar pedido");
-      setFormPedido({ livroId: "", quantidade: 1 });
+      setFormPedido({ descricao: "", realizado: false });
       fetchPedidos();
       setAlert({ open: true, message: "Pedido adicionado!", severity: "success" });
     } catch (err) {
@@ -184,19 +206,22 @@ export default function App() {
 
   const submitPagamento = async (e) => {
     e.preventDefault();
-    if (!formPagamento.pedidoId || !formPagamento.valor) {
-      alertError("Selecione pedido e informe valor");
-      return;
-    }
+    // Não há inputs no seu form original para cartao, pix, dinheiro, então não tem como validar melhor
     setLoading(true);
     try {
+      const payload = {
+        id: 0,
+        cartao: formPagamento.cartao,
+        pix: formPagamento.pix,
+        dinheiro: formPagamento.dinheiro,
+      };
       const res = await fetch(`${apiBase}/pagamentos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formPagamento),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Erro ao adicionar pagamento");
-      setFormPagamento({ pedidoId: "", valor: "" });
+      setFormPagamento({ cartao: false, pix: true, dinheiro: false });
       fetchPagamentos();
       setAlert({ open: true, message: "Pagamento adicionado!", severity: "success" });
     } catch (err) {
@@ -229,21 +254,18 @@ export default function App() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>Título</TableCell>
+                  <TableCell>Titulo</TableCell>
                   <TableCell>Autor</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {livros.map((livro) => {
-                  const autorNome = autores.find((a) => a.id === livro.autorId)?.nome || "—";
-                  return (
-                    <TableRow key={livro.id}>
-                      <TableCell>{livro.id}</TableCell>
-                      <TableCell>{livro.titulo}</TableCell>
-                      <TableCell>{autorNome}</TableCell>
-                    </TableRow>
-                  );
-                })}
+                {livros.map((livro) => (
+                  <TableRow key={livro.id}>
+                    <TableCell>{livro.id}</TableCell>
+                    <TableCell>{livro.nome}</TableCell>
+                    <TableCell>{livro.autor}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -251,31 +273,20 @@ export default function App() {
 
         <Box component="form" onSubmit={submitLivro} sx={{ marginTop: 3, maxWidth: 400 }}>
           <TextField
-            label="Título"
+            label="Titulo"
             fullWidth
-            value={formLivro.titulo}
-            onChange={(e) => setFormLivro({ ...formLivro, titulo: e.target.value })}
+            value={formLivro.nome}
+            onChange={(e) => setFormLivro({ ...formLivro, nome: e.target.value })}
             margin="normal"
-            required
           />
           <TextField
-            select
             label="Autor"
             fullWidth
-            SelectProps={{ native: true }}
-            value={formLivro.autorId}
-            onChange={(e) => setFormLivro({ ...formLivro, autorId: e.target.value })}
+            value={formLivro.autor}
+            onChange={(e) => setFormLivro({ ...formLivro, autor: e.target.value })}
             margin="normal"
-            required
-          >
-            <option value="">Selecione um autor</option>
-            {autores.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.nome}
-              </option>
-            ))}
-          </TextField>
-          <Button type="submit" variant="contained" sx={{ mt: 2 }} disabled={loading}>
+          />
+          <Button type="submit" variant="contained" disabled={loading}>
             Adicionar Livro
           </Button>
         </Box>
@@ -294,6 +305,7 @@ export default function App() {
                 <TableRow>
                   <TableCell>ID</TableCell>
                   <TableCell>Nome</TableCell>
+                  <TableCell>Obra</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -301,6 +313,7 @@ export default function App() {
                   <TableRow key={autor.id}>
                     <TableCell>{autor.id}</TableCell>
                     <TableCell>{autor.nome}</TableCell>
+                    <TableCell>{autor.obra}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -313,11 +326,17 @@ export default function App() {
             label="Nome"
             fullWidth
             value={formAutor.nome}
-            onChange={(e) => setFormAutor({ nome: e.target.value })}
+            onChange={(e) => setFormAutor({ ...formAutor, nome: e.target.value })}
             margin="normal"
-            required
           />
-          <Button type="submit" variant="contained" sx={{ mt: 2 }} disabled={loading}>
+          <TextField
+            label="Obra"
+            fullWidth
+            value={formAutor.obra}
+            onChange={(e) => setFormAutor({ ...formAutor, obra: e.target.value })}
+            margin="normal"
+          />
+          <Button type="submit" variant="contained" disabled={loading}>
             Adicionar Autor
           </Button>
         </Box>
@@ -335,21 +354,18 @@ export default function App() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>Livro</TableCell>
-                  <TableCell>Quantidade</TableCell>
+                  <TableCell>Descrição</TableCell>
+                  <TableCell>Realizado</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pedidos.map((pedido) => {
-                  const livroTitulo = livros.find((l) => l.id === pedido.livroId)?.titulo || "—";
-                  return (
-                    <TableRow key={pedido.id}>
-                      <TableCell>{pedido.id}</TableCell>
-                      <TableCell>{livroTitulo}</TableCell>
-                      <TableCell>{pedido.quantidade}</TableCell>
-                    </TableRow>
-                  );
-                })}
+                {pedidos.map((pedido) => (
+                  <TableRow key={pedido.id}>
+                    <TableCell>{pedido.id}</TableCell>
+                    <TableCell>{pedido.descricao}</TableCell>
+                    <TableCell>{pedido.realizado ? "Sim" : "Não"}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -357,35 +373,25 @@ export default function App() {
 
         <Box component="form" onSubmit={submitPedido} sx={{ marginTop: 3, maxWidth: 400 }}>
           <TextField
-            select
-            label="Livro"
+            label="Descrição"
             fullWidth
-            SelectProps={{ native: true }}
-            value={formPedido.livroId}
-            onChange={(e) => setFormPedido({ ...formPedido, livroId: e.target.value })}
+            value={formPedido.descricao}
+            onChange={(e) => setFormPedido({ ...formPedido, descricao: e.target.value })}
             margin="normal"
-            required
-          >
-            <option value="">Selecione um livro</option>
-            {livros.map((l) => (
-              <option key={l.id} value={l.id}>
-                {l.titulo}
-              </option>
-            ))}
-          </TextField>
-          <TextField
-            label="Quantidade"
-            type="number"
-            fullWidth
-            value={formPedido.quantidade}
-            onChange={(e) => setFormPedido({ ...formPedido, quantidade: Number(e.target.value) })}
-            margin="normal"
-            inputProps={{ min: 1 }}
-            required
           />
-          <Button type="submit" variant="contained" sx={{ mt: 2 }} disabled={loading}>
-            Adicionar Pedido
-          </Button>
+          <label>
+            <input
+              type="checkbox"
+              checked={formPedido.realizado}
+              onChange={(e) => setFormPedido({ ...formPedido, realizado: e.target.checked })}
+            />
+            Realizado
+          </label>
+          <Box mt={2}>
+            <Button type="submit" variant="contained" disabled={loading}>
+              Adicionar Pedido
+            </Button>
+          </Box>
         </Box>
       </TabPanel>
 
@@ -401,59 +407,57 @@ export default function App() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>Pedido</TableCell>
-                  <TableCell>Valor</TableCell>
+                  <TableCell>Cartão</TableCell>
+                  <TableCell>Pix</TableCell>
+                  <TableCell>Dinheiro</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pagamentos.map((pagamento) => {
-                  const pedidoInfo = pedidos.find((p) => p.id === pagamento.pedidoId);
-                  const livroTitulo = pedidoInfo
-                    ? livros.find((l) => l.id === pedidoInfo.livroId)?.titulo
-                    : "—";
-                  return (
-                    <TableRow key={pagamento.id}>
-                      <TableCell>{pagamento.id}</TableCell>
-                      <TableCell>{pedidoInfo ? `Pedido ${pedidoInfo.id} - ${livroTitulo}` : "—"}</TableCell>
-                      <TableCell>{pagamento.valor}</TableCell>
-                    </TableRow>
-                  );
-                })}
+                {pagamentos.map((pag) => (
+                  <TableRow key={pag.id}>
+                    <TableCell>{pag.id}</TableCell>
+                    <TableCell>{pag.cartao ? "Sim" : "Não"}</TableCell>
+                    <TableCell>{pag.pix ? "Sim" : "Não"}</TableCell>
+                    <TableCell>{pag.dinheiro ? "Sim" : "Não"}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
         )}
 
         <Box component="form" onSubmit={submitPagamento} sx={{ marginTop: 3, maxWidth: 400 }}>
-          <TextField
-            select
-            label="Pedido"
-            fullWidth
-            SelectProps={{ native: true }}
-            value={formPagamento.pedidoId}
-            onChange={(e) => setFormPagamento({ ...formPagamento, pedidoId: e.target.value })}
-            margin="normal"
-            required
-          >
-            <option value="">Selecione um pedido</option>
-            {pedidos.map((p) => (
-              <option key={p.id} value={p.id}>
-                Pedido {p.id}
-              </option>
-            ))}
-          </TextField>
-          <TextField
-            label="Valor"
-            type="number"
-            fullWidth
-            value={formPagamento.valor}
-            onChange={(e) => setFormPagamento({ ...formPagamento, valor: e.target.value })}
-            margin="normal"
-            required
-          />
-          <Button type="submit" variant="contained" sx={{ mt: 2 }} disabled={loading}>
-            Adicionar Pagamento
-          </Button>
+          <label>
+            <input
+              type="checkbox"
+              checked={formPagamento.cartao}
+              onChange={(e) => setFormPagamento({ ...formPagamento, cartao: e.target.checked })}
+            />
+            Cartão
+          </label>
+          <br />
+          <label>
+            <input
+              type="checkbox"
+              checked={formPagamento.pix}
+              onChange={(e) => setFormPagamento({ ...formPagamento, pix: e.target.checked })}
+            />
+            Pix
+          </label>
+          <br />
+          <label>
+            <input
+              type="checkbox"
+              checked={formPagamento.dinheiro}
+              onChange={(e) => setFormPagamento({ ...formPagamento, dinheiro: e.target.checked })}
+            />
+            Dinheiro
+          </label>
+          <Box mt={2}>
+            <Button type="submit" variant="contained" disabled={loading}>
+              Adicionar Pagamento
+            </Button>
+          </Box>
         </Box>
       </TabPanel>
 
@@ -461,7 +465,6 @@ export default function App() {
         open={alert.open}
         autoHideDuration={4000}
         onClose={() => setAlert({ ...alert, open: false })}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert severity={alert.severity} onClose={() => setAlert({ ...alert, open: false })}>
           {alert.message}
